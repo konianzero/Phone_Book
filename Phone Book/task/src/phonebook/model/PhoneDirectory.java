@@ -39,7 +39,19 @@ public class PhoneDirectory implements Iterable<Entry>{
         };
     }
 
-    public boolean notEmpty() {
-        return Objects.nonNull(entries);
+    public boolean isEmpty() {
+        return Objects.isNull(entries);
+    }
+
+    public int size() {
+        return entries.length;
+    }
+
+    public Entry getEntry(int i) {
+        return entries[i];
+    }
+
+    public void setEntry(int i, Entry e) {
+        entries[i] = e;
     }
 }

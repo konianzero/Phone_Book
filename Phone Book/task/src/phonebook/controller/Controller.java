@@ -1,7 +1,9 @@
 package phonebook.controller;
 
-import phonebook.algorithm.LinearSearch;
-import phonebook.algorithm.Search;
+import phonebook.algorithm.search.JumpSearch;
+import phonebook.algorithm.search.LinearSearch;
+import phonebook.algorithm.Statistic;
+import phonebook.algorithm.sort.BobbleSort;
 import phonebook.model.PhoneDirectory;
 import phonebook.view.ConsoleView;
 
@@ -11,6 +13,8 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 public class Controller {
+    private static final String START = "Start searching (%s)...";
+
     private ConsoleView view;
     private PhoneDirectory directory;
     private String[] names;
@@ -34,10 +38,22 @@ public class Controller {
     }
 
     public void onStart() {
-        LinearSearch search = new LinearSearch();
-        if (directory.notEmpty() && Objects.nonNull(names)) {
-            search.execute(directory, names);
-        }
-        view.print(search.statistic());
+        if (directory.isEmpty() && Objects.isNull(names)) { return; }
+
+        view.print(String.format(START, "linear search"));
+        view.print(new Statistic()
+                    .addSearch(new LinearSearch())
+                    .execute(directory, names)
+                    .getStatistic()
+        );
+
+        view.print("\n" + String.format(START, "bubble sort + jump search"));
+        view.print(new Statistic()
+                .addSort(new BobbleSort())
+                .addSearch(new LinearSearch())
+                .otherSearch(new JumpSearch())
+                .execute(directory, names)
+                .getStatistic()
+        );
     }
 }
