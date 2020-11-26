@@ -51,7 +51,7 @@ public class PhoneDirectory implements Iterable<Entry>{
         return entries[i];
     }
 
-    public void setEntry(int i, Entry e) {
-        entries[i] = e;
+    public Entry[] getEntries() {
+        return entries;
     }
 }

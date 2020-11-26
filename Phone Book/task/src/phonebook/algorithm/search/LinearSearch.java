@@ -1,10 +1,8 @@
 package phonebook.algorithm.search;
 
-import phonebook.algorithm.Algorithm;
 import phonebook.model.Entry;
 import phonebook.model.PhoneDirectory;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -22,9 +20,6 @@ public class LinearSearch implements Search {
             return Optional.empty();
         };
 
-        return Arrays.stream(names)
-                     .map(search)
-                     .filter(Optional::isPresent)
-                     .count();
+        return findEntries(search, names);
     }
 }

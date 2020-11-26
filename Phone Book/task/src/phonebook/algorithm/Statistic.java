@@ -5,20 +5,19 @@ import phonebook.algorithm.sort.Sort;
 import phonebook.model.PhoneDirectory;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.*;
 
 import static java.lang.System.currentTimeMillis;
 
 public class Statistic {
-    protected Search search;
-    protected Search other;
-    protected Sort sort;
+    private Search search;
+    private Search other;
+    private Sort sort;
 
-    protected long entriesFound;
-    protected long allEntries;
+    private long entriesFound;
+    private long allEntries;
 
-    protected long startTime;
+    private long startTime;
     private long sortTime;
     private long searchTime;
 
@@ -59,50 +58,53 @@ public class Statistic {
     }
 
     private boolean sort(PhoneDirectory directory) {
-        if (Optional.ofNullable(sort).isPresent()) {
-            ExecutorService executor = Executors.newFixedThreadPool(4);
+        if (Objects.nonNull(sort)) {
+            ExecutorService executorService = Executors.newFixedThreadPool(4);
             startTime();
 
-            Future<?> future =executor.submit(() -> sort.sort(directory));
-            executor.shutdown();
+            Future<?> future = executorService.submit(() -> sort.sort(directory));
+
             try {
                 future.get(100_000, TimeUnit.MILLISECONDS);
                 isSorted = true;
-            } catch (TimeoutException e) {
+            } catch (TimeoutException te) {
                 future.cancel(true);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
-            executor.shutdownNow();
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException ie) {
+                executorService.shutdownNow();
+            }
             sortTime = stopTime();
         }
         return isSorted;
     }
 
-    public void startTime() {
+    private void startTime() {
         startTime = currentTimeMillis();
     }
 
-    public long stopTime() {
+    private long stopTime() {
         return currentTimeMillis() - startTime;
     }
 
     public String getStatistic() {
         StringBuilder stat = new StringBuilder();
-        stat.append(String.format("Found %d / %d entries. %s",
-                entriesFound,
-                allEntries,
-                String.format("Time taken: %1$TM min. %1$TS sec. %1$TL ms.", sortTime + searchTime)));
+        stat.append(String.format("Found %d / %d entries. ", entriesFound, allEntries))
+            .append(String.format("Time taken: %1$TM min. %1$TS sec. %1$TL ms.", sortTime + searchTime));
 
         if (Objects.nonNull(sort)) {
-            if (isSorted) {
-                stat.append(String.format("\nSorting time: %1$TM min. %1$TS sec. %1$TL ms.", sortTime))
-                    .append(String.format("\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.", searchTime));
-            } else {
-                stat.append(String.format("\nSorting time: %1$TM min. %1$TS sec. %1$TL ms. - STOPPED, moved to linear search", sortTime))
-                    .append(String.format("\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.", searchTime));
+            stat.append(String.format("\nSorting time: %1$TM min. %1$TS sec. %1$TL ms.", sortTime));
+            if (!isSorted) {
+                stat.append(" - STOPPED, moved to linear search");
             }
+            stat.append(String.format("\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.", searchTime));
         }
         return stat.toString();
     }

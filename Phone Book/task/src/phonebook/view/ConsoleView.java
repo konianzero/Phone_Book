@@ -12,9 +12,12 @@ public class ConsoleView {
 
     public void start() {
         controller.onStart();
+        exit();
     }
 
     public void print(String s) {
         System.out.println(s);
     }
+
+    private void exit() { System.exit(0); }
 }

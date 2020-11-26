@@ -1,9 +1,11 @@
 package phonebook.controller;
 
+import phonebook.algorithm.search.BinarySearch;
 import phonebook.algorithm.search.JumpSearch;
 import phonebook.algorithm.search.LinearSearch;
 import phonebook.algorithm.Statistic;
 import phonebook.algorithm.sort.BobbleSort;
+import phonebook.algorithm.sort.QuickSort;
 import phonebook.model.PhoneDirectory;
 import phonebook.view.ConsoleView;
 
@@ -21,7 +23,6 @@ public class Controller {
 
     public Controller(String file) {
         try {
-//            names = Pattern.compile("\\R").split(Files.readString(Path.of(file)));
             names = Files.readAllLines(Path.of(file))
                          .toArray(String[]::new);
         } catch (IOException ioe) {
@@ -40,18 +41,37 @@ public class Controller {
     public void onStart() {
         if (directory.isEmpty() && Objects.isNull(names)) { return; }
 
+        linearSearch();
+        jumpSearch();
+        binarySearch();
+    }
+
+    private void linearSearch() {
         view.print(String.format(START, "linear search"));
         view.print(new Statistic()
-                    .addSearch(new LinearSearch())
-                    .execute(directory, names)
-                    .getStatistic()
+                .addSearch(new LinearSearch())
+                .execute(directory, names)
+                .getStatistic()
         );
+    }
 
+    private void jumpSearch() {
         view.print("\n" + String.format(START, "bubble sort + jump search"));
         view.print(new Statistic()
                 .addSort(new BobbleSort())
                 .addSearch(new LinearSearch())
                 .otherSearch(new JumpSearch())
+                .execute(directory, names)
+                .getStatistic()
+        );
+    }
+
+    private void binarySearch() {
+        view.print("\n" + String.format(START, "quick sort + binary search"));
+        view.print(new Statistic()
+                .addSort(new QuickSort())
+                .addSearch(new LinearSearch())
+                .otherSearch(new BinarySearch())
                 .execute(directory, names)
                 .getStatistic()
         );
