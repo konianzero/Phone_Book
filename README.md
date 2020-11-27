@@ -4,8 +4,7 @@
 __Hard__:
 
 - Minesweeper
-    - Lay the groundwork
-    - Flexible mines
-    - Look around you
-    - Prepare for battle
-    - Battle_
+    - A needle in the hay
+    - Jumping bubbles
+    - Need for speed
+    - Instant search

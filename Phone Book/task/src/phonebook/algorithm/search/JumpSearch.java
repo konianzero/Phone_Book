@@ -1,6 +1,5 @@
 package phonebook.algorithm.search;
 
-import phonebook.model.Entry;
 import phonebook.model.PhoneDirectory;
 
 import java.util.Objects;
@@ -9,55 +8,52 @@ import java.util.function.Function;
 
 public class JumpSearch implements Search {
     @Override
-    public long execute(PhoneDirectory directory, String[] names) {
-        final Function<String, Optional<Entry>> search = name -> jumpSearch(directory, name);
+    public long search(PhoneDirectory directory, String[] names) {
+        final Function<String, Optional<Long>> search = name -> jumpSearch(directory, name);
 
         return findEntries(search, names);
     }
 
-    public Optional<Entry> jumpSearch(PhoneDirectory directory, String name) {
-        int currentRight = 0; // right border of the current block
+    private Optional<Long> jumpSearch(PhoneDirectory directory, String name) {
+        int curRight = 0; // right border of the current block
 
-        // If array is empty, the element is not found
-//        if (directory.isEmpty()) {
+
+//         if (directory.isEmpty()) {                                         // if array is empty, the element is not found
 //            return Optional.empty();
 //        }
 
-        // Check the first element
-        if (Objects.equals(directory.getEntry(currentRight).getName(), name)) {
-            return Optional.of(directory.getEntry(currentRight));
+        if (Objects.equals(directory.getEntry(curRight).getName(), name)) {   // check the first element
+            return Optional.of(directory.getEntry(curRight).getPhone());
         }
 
-        // Calculating the jump length over array elements
-        int jumpLength = (int) Math.sqrt(directory.size());
-        int prevRight = 0; // right border of the previous block
+        int jumpLength = (int) Math.sqrt(directory.size());                   // calculating the jump length over array elements
+        int prevRight = 0;                                                    // right border of the previous block
 
-        // Finding a block where the element may be present
-        while (currentRight < directory.size() - 1) {
-            // Calculating the right border of the following block
-            currentRight = Math.min(directory.size() - 1, currentRight + jumpLength);
+        while (curRight < directory.size() - 1) {                             // finding a block where the element may be present
+            curRight = Math.min(directory.size() - 1, curRight + jumpLength); // calculating the right border of the following block
 
-            if (directory.getEntry(currentRight).getName().compareTo(name) >= 0) {
-                break; // Found a block that may contain the target element
+            if (directory.getEntry(curRight).getName().compareTo(name) >= 0) {// found a block that may contain the target element
+                break;
             }
 
-            prevRight = currentRight; // update the previous right block border
+            prevRight = curRight;                                             // update the previous right block border
         }
 
-        // If the last block is reached and it cannot contain the target value => not found
-        if (currentRight == directory.size() - 1 && name.compareTo(directory.getEntry(currentRight).getName()) > 0) {
+        // if the last block is reached and it cannot contain the target value => not found
+        if (curRight == directory.size() - 1 && name.compareTo(directory.getEntry(curRight).getName()) > 0) {
             return Optional.empty();
         }
 
         // Doing linear search in the found block
-        return backwardSearch(directory, name, prevRight, currentRight);
+        return backwardSearch(directory, name, prevRight, curRight);
     }
 
-    public Optional<Entry> backwardSearch(PhoneDirectory directory, String name, int leftExcl, int rightIncl) {
+    private Optional<Long> backwardSearch(PhoneDirectory directory, String name, int leftExcl, int rightIncl) {
         for (int i = rightIncl; i > leftExcl; i--) {
+
             int cmp = directory.getEntry(i).getName().compareTo(name);
             if (cmp == 0)  {
-                return Optional.of(directory.getEntry(i));
+                return Optional.of(directory.getEntry(i).getPhone());
             } else if (cmp < 0) {
                 return Optional.empty();
             }

@@ -10,11 +10,11 @@ import java.util.function.Function;
 public class LinearSearch implements Search {
 
     @Override
-    public long execute(PhoneDirectory directory, String[] names) {
-        final Function<String, Optional<Entry>> search = name -> {
+    public long search(PhoneDirectory directory, String[] names) {
+        final Function<String, Optional<Long>> search = name -> {
             for (Entry e: directory) {
                 if (Objects.equals(name, e.getName())) {
-                    return Optional.of(e);
+                    return Optional.of(e.getPhone());
                 }
             }
             return Optional.empty();

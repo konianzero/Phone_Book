@@ -5,7 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 public class PhoneDirectory implements Iterable<Entry>{
     private Entry[] entries;
@@ -40,7 +41,7 @@ public class PhoneDirectory implements Iterable<Entry>{
     }
 
     public boolean isEmpty() {
-        return Objects.isNull(entries);
+        return isNull(entries);
     }
 
     public int size() {

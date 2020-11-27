@@ -8,9 +8,10 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public interface Search {
-    long execute(PhoneDirectory directory, String[] names);
+    long search(PhoneDirectory directory, String[] names);
 
-    default long findEntries(Function<String, Optional<Entry>> search, String[] names) {
+    // Generic Type for HashTable class
+    default <T> long findEntries(Function<String, Optional<T>> search, String[] names) {
         return Arrays.stream(names)
                      .map(search)
                      .filter(Optional::isPresent)

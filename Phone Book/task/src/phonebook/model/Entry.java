@@ -1,20 +1,25 @@
 package phonebook.model;
 
 public class Entry implements Comparable<Entry> {
-    private final String phone;
+    private final Long phone;
     private final String name;
 
     public Entry(final String line) {
         String[] tokens = line.split(" ", 2);
-        phone = tokens[0];
+        phone = Long.valueOf(tokens[0]);
         name = tokens[1];
+    }
+
+    public Entry(Entry e) {
+        phone = e.getPhone();
+        name = e.getName();
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPhone() {
+    public Long getPhone() {
         return phone;
     }
 
