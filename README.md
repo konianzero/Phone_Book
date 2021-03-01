@@ -3,7 +3,7 @@
 
 __Hard__:
 
-- Minesweeper
+- Phone Book
     - A needle in the hay
     - Jumping bubbles
     - Need for speed
