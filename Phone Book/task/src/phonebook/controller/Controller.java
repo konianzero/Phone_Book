@@ -93,24 +93,24 @@ public class Controller {
                                           "\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.")
         );
 
-//        view.print("\n" + String.format(START, "hash table without TableEntry class"));
-//        SymbolTable hashTable = new HashTable();
-//        view.print(new Statistic()
-//                        .addSort(hashTable)
-//                        .addSearch(hashTable)
-//                        .execute(directory, names)
-//                        .getStatistic("\nCreating time: %1$TM min. %1$TS sec. %1$TL ms.",
-//                                          "\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.")
-//        );
+        view.print("\n" + String.format(START, "hash table without TableEntry class"));
+        SymbolTable hashTable = new HashTable<String, Long>();
+        view.print(new Statistic()
+                        .addSort(hashTable)
+                        .addSearch(hashTable)
+                        .execute(directory, names)
+                        .getStatistic("\nCreating time: %1$TM min. %1$TS sec. %1$TL ms.",
+                                          "\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.")
+        );
 
-//        view.print("\n" + String.format(START, "hash table with java.util.Hashtable"));
-//        SymbolTable hashSearch = new HashSearch();
-//        view.print(new Statistic()
-//                        .addSort(hashSearch)
-//                        .addSearch(hashSearch)
-//                        .execute(directory, names)
-//                        .getStatistic("\nCreating time: %1$TM min. %1$TS sec. %1$TL ms.",
-//                                          "\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.")
-//        );
+        view.print("\n" + String.format(START, "hash table with java.util.Hashtable"));
+        SymbolTable hashSearch = new HashSearch();
+        view.print(new Statistic()
+                        .addSort(hashSearch)
+                        .addSearch(hashSearch)
+                        .execute(directory, names)
+                        .getStatistic("\nCreating time: %1$TM min. %1$TS sec. %1$TL ms.",
+                                          "\nSearching time: %1$TM min. %1$TS sec. %1$TL ms.")
+        );
     }
 }
